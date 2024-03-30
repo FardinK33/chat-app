@@ -1,9 +1,9 @@
-import Message from "../model/message.model";
-import Conversation from "../model/conversation.model";
+import Message from "../model/message.model.js";
+import Conversation from "../model/conversation.model.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const message = req.body;
+    const message = req.body.message;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 

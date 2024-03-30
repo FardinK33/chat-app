@@ -1,6 +1,6 @@
 import express from "express";
-import protectRoute from "../middleware/protectRoute";
-import getUsers from "../controller/getUsers.controller";
+import protectRoute from "../middleware/protectRoute.js";
+import getUsers from "../controller/getUsers.controller.js";
 
 const router = express.Router();
 

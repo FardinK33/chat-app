@@ -43,7 +43,7 @@ export const signup = async (req, res) => {
       return res.status(201).json({
         _id: newUser._id,
         name: newUser.name,
-        usename: newUser.usename,
+        username: newUser.username,
         password: newUser.password,
         gender: newUser.gender,
         profilePic: newUser.profilePic,
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
       return res.status(201).json({
         _id: user._id,
         name: user.name,
-        usename: user.usename,
+        username: user.username,
         password: user.password,
         gender: user.gender,
         profilePic: user.profilePic,
