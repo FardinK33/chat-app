@@ -16,7 +16,7 @@ app.use(express.json()); // Middleware for parsing JSON bodies
 app.use(cookieParser());
 
 // app.get("/", (req, res) => {
-//   res.send("Server is Working");
+//   res.send("Server is Running");
 // });
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

@@ -4,18 +4,19 @@ import generateTokenandCookie from "../utils/generateTokenCookie.js";
 
 export const signup = async (req, res) => {
   try {
-    console.log("Sign-up Requested !");
+    // console.log("Sign-up Requested !");
     const { name, username, password, confirmPassword, gender } = req.body;
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
       return res.status(400).json({ error: "Passwords don't match" });
     }
 
     const user = await User.findOne({ username });
 
     if (user) {
-      return res.status(400).json({ error: "User Already Exists" });
+      return res
+        .status(400)
+        .json({ error: "User Already Exists with This Username" });
     }
 
     // Hashing Password
@@ -44,14 +45,12 @@ export const signup = async (req, res) => {
         _id: newUser._id,
         name: newUser.name,
         username: newUser.username,
-        password: newUser.password,
-        gender: newUser.gender,
         profilePic: newUser.profilePic,
       });
     }
   } catch (error) {
     console.log("Error in SignUp : ", error.message);
-    res.status(500).json({ error: "Internal Server Erro" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -71,13 +70,11 @@ export const login = async (req, res) => {
 
       generateTokenandCookie(user._id, res);
 
-      console.log("Login Successfull");
+      // console.log("Login Successfull");
       return res.status(201).json({
         _id: user._id,
         name: user.name,
         username: user.username,
-        password: user.password,
-        gender: user.gender,
         profilePic: user.profilePic,
       });
     } else {

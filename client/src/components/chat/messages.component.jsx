@@ -1,19 +1,29 @@
+import useGetMessages from "../../hooks/useGetMessages";
+import useConversation from "../../zustand/useConversations";
 import Message from "./message.component";
 
 const Messages = () => {
+  const { loading } = useGetMessages();
+  const { messages } = useConversation();
   return (
     <div className="px-4 flex-1 overflow-auto">
-      <Message position="chat-start" />
-      <Message color="#05bbaa" position="chat-end" />
-      <Message position="chat-start" />
-      <Message position="chat-start" />
-      <Message position="chat-end" />
-      <Message position="chat-end" />
-      <Message position="chat-start" />
-      <Message position="chat-start" />
-      <Message position="chat-end" />
-      <Message position="chat-end" />
-      <Message position="chat-start" />
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <span className="loading loading-dots loading-lg"></span>
+        </div>
+      ) : messages.length > 0 ? (
+        messages.map((message) => (
+          <Message
+            senderId={message.senderId}
+            message={message.message}
+            key={message._id}
+          />
+        ))
+      ) : (
+        <div className="flex justify-center items-center h-full">
+          <p>Send a message to Start Conversation</p>
+        </div>
+      )}
     </div>
   );
 };

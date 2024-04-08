@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/app-logo-cut.png";
 import { Link } from "react-router-dom";
 import GenderCheckbox from "../components/checkbox.component";
 
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import useSignup from "../hooks/useSignup";
 
 const Signup = () => {
-  const handleSubmit = (e) => {
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+  const { signup, loading } = useSignup();
+
+  const handleOnChange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  const handleCheckboxChange = (gender) => {
+    setInputs({ ...inputs, gender });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    await signup(inputs);
   };
 
   return (
@@ -25,7 +45,12 @@ const Signup = () => {
             <div className="py-2">
               <label className="input flex items-center gap-2 bg-dark-purple bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.6)]">
                 <MdOutlineDriveFileRenameOutline />
-                <input type="text" className="grow" placeholder="Full Name" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Full Name"
+                  onChange={(e) => handleOnChange(e.target.value, "fullName")}
+                />
               </label>
             </div>
 
@@ -39,24 +64,14 @@ const Signup = () => {
                 >
                   <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
                 </svg>
-                <input type="text" className="grow" placeholder="Username" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Username"
+                  onChange={(e) => handleOnChange(e.target.value, "username")}
+                />
               </label>
             </div>
-
-            {/* <div className="py-2">
-              <label className="input flex items-center gap-2 bg-dark-purple bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.6)]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-                  <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Email" />
-              </label>
-            </div> */}
 
             <div className="py-2">
               <label className="input flex items-center gap-2 bg-dark-purple bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.6)]">
@@ -76,6 +91,7 @@ const Signup = () => {
                   type="password"
                   className="grow"
                   placeholder="Password"
+                  onChange={(e) => handleOnChange(e.target.value, "password")}
                 />
               </label>
             </div>
@@ -97,18 +113,30 @@ const Signup = () => {
                   type="password"
                   className="grow"
                   placeholder="Confirm Password"
+                  onChange={(e) =>
+                    handleOnChange(e.target.value, "confirmPassword")
+                  }
                 />
               </label>
             </div>
 
-            <GenderCheckbox />
+            <GenderCheckbox
+              handleCheckboxChange={handleCheckboxChange}
+              selectedGender={inputs.gender}
+            />
 
-            <button
-              className="w-full my-5 bg-purple-600 h-10 rounded-lg text-white hover:bg-purple-700 hover:text-gray-300"
-              type="submit"
-            >
-              Submit
-            </button>
+            {loading ? (
+              <button className="w-full my-5 bg-purple-700 h-10 rounded-lg flex items-center justify-center">
+                <span className="loading loading-spinner text-gray-400"></span>
+              </button>
+            ) : (
+              <button
+                className="w-full my-5 bg-purple-600 h-10 rounded-lg text-white hover:bg-purple-700 hover:text-gray-300"
+                type="submit"
+              >
+                Submit
+              </button>
+            )}
           </form>
         </div>
 
