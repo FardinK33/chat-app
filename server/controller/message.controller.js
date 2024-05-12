@@ -1,5 +1,8 @@
 import Message from "../model/message.model.js";
 import Conversation from "../model/conversation.model.js";
+import { getSocketId, io } from "../socket/socket.js";
+// import { generateMessage } from "../bot/geminiConfiguration.js";
+import { generateMessage } from "../server.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -27,9 +30,29 @@ export const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage);
     }
 
-    await Promise.all([conversation.save(), newMessage.save()]);
+    await newMessage.save();
 
-    res.status(201).json(newMessage);
+    let generatedMsg = null;
+    if (receiverId === process.env.VITE_BOT_ID) {
+      const generatedText = await generateMessage(message);
+      generatedMsg = new Message({
+        senderId: receiverId,
+        receiverId: senderId,
+        message: generatedText,
+      });
+      conversation.messages.push(generatedMsg);
+      await generatedMsg.save();
+    }
+
+    await conversation.save();
+
+    const receiverSocketId = getSocketId(receiverId);
+    if (receiverSocketId)
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+
+    const resArray = generatedMsg ? [newMessage, generatedMsg] : [newMessage];
+
+    res.status(201).json(resArray);
   } catch (error) {
     console.log("Error in sendMessage Controller : ", error.message);
     res.status(500).json({ error: "Internal Server Error" });

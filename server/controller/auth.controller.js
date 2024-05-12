@@ -4,7 +4,6 @@ import generateTokenandCookie from "../utils/generateTokenCookie.js";
 
 export const signup = async (req, res) => {
   try {
-    // console.log("Sign-up Requested !");
     const { name, username, password, confirmPassword, gender } = req.body;
 
     if (password !== confirmPassword) {
@@ -70,7 +69,6 @@ export const login = async (req, res) => {
 
       generateTokenandCookie(user._id, res);
 
-      // console.log("Login Successfull");
       return res.status(201).json({
         _id: user._id,
         name: user.name,

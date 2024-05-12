@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import useConversation from "../zustand/useConversations";
 
 const useGetUsers = () => {
   const [loading, setLoading] = useState(false);
   const [conversations, setConversations] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -17,6 +19,7 @@ const useGetUsers = () => {
         }
 
         setConversations(data);
+        setFilteredUsers(data);
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -26,7 +29,14 @@ const useGetUsers = () => {
     getUsers();
   }, []);
 
-  return { loading, conversations };
+  const filterUsers = (searchedUser) => {
+    const filtered = conversations.filter((user) =>
+      user.name.toLowerCase().includes(searchedUser.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  };
+
+  return { loading, filterUsers, filteredUsers };
 };
 
 export default useGetUsers;

@@ -2,6 +2,7 @@ import React from "react";
 import useConversation from "../../zustand/useConversations";
 import { useAuthContext } from "../../context/AuthContext";
 import { extractTime } from "../../utils/extractTime";
+import ReactMarkdown from "react-markdown";
 
 const Message = ({ senderId, message }) => {
   const { selectedConversation } = useConversation();
@@ -26,7 +27,7 @@ const Message = ({ senderId, message }) => {
           isMe ? "bg-[#8B93FF]" : "bg-[#D6589F]"
         } text-white`}
       >
-        {message}
+        <ReactMarkdown>{message}</ReactMarkdown>
       </div>
       {/* <div className="chat-footer text-xs flex gap-1 items-center text-gray-300 px-3 py-1">
         {exactTime}

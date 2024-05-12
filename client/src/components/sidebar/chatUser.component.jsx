@@ -1,25 +1,33 @@
 import React from "react";
 import useConversation from "../../zustand/useConversations";
 import { useAuthContext } from "../../context/AuthContext";
+import { useSocketContext } from "../../context/SocketContext";
 
 const ChatUser = ({ user }) => {
   const { authUser } = useAuthContext();
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation, setMessages } =
+    useConversation();
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(user._id);
+
+  const handleChange = () => {
+    if (!selectedConversation || selectedConversation._id !== user._id) {
+      setSelectedConversation(user);
+      setMessages([]);
+    } else {
+      setSelectedConversation(null);
+      setMessages([]);
+    }
+  };
+
   return (
-    <div
-      className="pb-1"
-      onClick={() => {
-        !selectedConversation || selectedConversation._id !== user._id
-          ? setSelectedConversation(user)
-          : setSelectedConversation(null);
-      }}
-    >
+    <div className="pb-1" onClick={handleChange}>
       <div
         className={`flex gap-2 items-center hover:bg-purple-complimentry hover:bg-opacity-50 rounded p-2 py-1 cursor-pointer ${
           selectedConversation?._id === user._id ? "bg-purple-complimentry" : ""
         }`}
       >
-        <div className="avatar online">
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
             <img src={user.profilePic} />
           </div>
