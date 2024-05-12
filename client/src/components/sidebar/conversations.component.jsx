@@ -12,9 +12,13 @@ const Conversations = ({ findUser }) => {
 
   return (
     <div className="py-2 flex flex-col overflow-auto">
-      {filteredUsers?.map((user) => (
-        <ChatUser user={user} key={user._id} />
-      ))}
+      {!loading ? (
+        filteredUsers?.map((user) => <ChatUser user={user} key={user._id} />)
+      ) : (
+        <div className="flex justify-center items-center h-full">
+          <span className="loading loading-dots loading-lg"></span>
+        </div>
+      )}
     </div>
   );
 };
